@@ -25,10 +25,10 @@ A constructor function is any function intended to be called with the `new` oper
 Now you knee deep:
 ------------
 
-There is much more to it than that though so i suggest you read: 
+There is much more to it than that though so i suggest you read:
 [JavaScript constructors, prototypes, and the `new` keyword](http://pivotallabs.com/javascript-constructors-prototypes-and-the-new-keyword/)
 
-NOTE: Implaments makes no assumption about your contructors, so you should write you own guard code. Here is an example
+NOTE: Implaments makes no assumption about your contructors, so you should write you own guard code. Here is an example:
 [Basic JavaScript Part 4: Enforcing New on Constructor Functions](http://elegantcode.com/2010/12/21/basic-javascript-part-4-enforcing-new-on-constructor-functions/)
 
 ... Now that you are familiar with these consept, back to Implament.js. 
