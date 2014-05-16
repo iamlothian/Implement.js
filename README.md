@@ -100,4 +100,49 @@ Implamented function also gain the `Extend` method, which is used to extend impl
 
 Notice `propa` is set to 10, this is because the implamentation arguments are remembered and used when implamenting `a` on `d`. once all of `c`'s constructors have been run, the extending constructors are run. In the above example the an anonymous constructor function is adding 'd' to the `propb` property set by the `b` constructor.
     
+`__InstanceOf__` will also work on extended objects
+
+    d.__InstanceOf__(a)         // -> true
+    d.__InstanceOf__(b)         // -> true
+    d.__InstanceOf__(c)         // -> true
+    d.__InstanceOf__(Function)  // -> true
+    
+Implaments and Function prototype:
+------------
+
+Don't want to have methods instanced onto every object? Try this:
+
+    var p = function() {
+      if (!(( !! this && this.__safe__) || this instanceof p != 0))
+        throw new Error();
+      var self = this;
+    
+      // set arguments on the public scope to be passed to prototype
+      self.arguments = arguments;
+    }
+    p.prototype = new function() {
+    
+      // make protected
+      var _arguments = this.arguments;
+      delete this.arguments;
+    
+      this.someFunc = function() {
+        return _arguments;
+      }
+    }
+    
+    var withProto = Function.Implement([p, 'hello', 'world']);
+    
+    console.log("\nwithProto = Function.Implement([p,'hello','world']):\n", withProto);
+    console.log(
+      "\nwithProto.__isInstanceOf__(p):" + withProto.__isInstanceOf__(p) // true
+    );
+
+
+
 TODO: Continue writing instructions
+
+Road Map
+============
+
+Things to do and improvments...
