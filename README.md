@@ -22,7 +22,7 @@ A constructor function is any function intended to be called with the `new` oper
     
 `b` is a new object that has all the properties defined by `a`
 
-Now you knee deep:
+Now you're knee deep:
 ------------
 
 There is much more to it than that though so i suggest you read:
