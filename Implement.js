@@ -12,7 +12,7 @@ Function.prototype.Implement = function() {
 
   return (function(args) {
 
-    // keep lost of constructors implamented
+    // keep list of constructors implamented
     var implaments = [],
       capture_args = Array.prototype.slice.call(args, 0);
 
