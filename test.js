@@ -14,9 +14,9 @@ var a = function() {
   var self = this;
 
   self.a = 'a';
-  var a = ',local a';
+  var _a = ',local a';
   self.fn = function() {
-    console.log(self.a, a);
+    console.log(self.a, _a);
   }
 }
 
@@ -41,7 +41,7 @@ console.log(
 // #################
 var d = c.Extend(function() {
   var self = this;
-  var a = 'changed a';
+  var _a = 'changed a';
 
   var basefn = this.fn;
   self.fn = function() {
@@ -69,20 +69,17 @@ var p = function() {
   // set arguments on the public scope to be passed to prototype
   self.arguments = arguments;
 }
-p.prototype = new function() {
-
-  // make protected
-  var _arguments = this.arguments;
-  delete this.arguments;
-
+p.prototype.someFunc = function() {
   this.someFunc = function() {
-    return _arguments;
+    return this.data;
   }
 }
 
-var withProto = Function.Implement([p, 'hello', 'world']);
+var withProto = p.Implement(function(){
+  this.data = 'hello world';
+});
 
-console.log("\nwithProto = Function.Implement([p,'hello','world']):\n", withProto);
+console.log("\nwithProto = p.Implement(...):\n", withProto);
 console.log(
   "\nwithProto.__isInstanceOf__(p):" + withProto.__isInstanceOf__(p) // true
 );

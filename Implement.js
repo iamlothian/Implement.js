@@ -2,40 +2,74 @@
 Function.prototype.Implement = function() {
 
   'use strict';
+  
+  var 
+    implementContext = (Object.prototype.toString.call(this) === "[object Function]" && this.name != "Function") ? this : null
+  , implamentList = Array.prototype.slice.call(arguments, 0)
 
-  var base = (
-    Object.prototype.toString.call(this) === "[object Function]" &&
-    this.name != "Function") ?
-    new this : {
-      __safe__: true
-  };
+  /* 
+    The prototype_phase will copy all prototype functions from constructor functions to 
+    a temporary _imp function constructor.
 
-  return (function(args) {
+    Then the Implement format [implicit OR explicit function] is checked and a new 
+    object is returned that will be the base of the implamentation
+  */
+  , prototype_phase = function(implamentList, implementContext){
+    
+    var _imp = function() { this.__safe__ = true; }; 
+    
+    for (var arg in implamentList){
+      var proto = implamentList[arg].prototype;
+      for (var prop in proto) _imp.prototype[prop] = proto[prop];     
+    }
+
+    return (!!implementContext) ? 
+      new implementContext : // explicit function
+      new _imp ; // implicit
+
+  }
+
+  /*
+    The compile_phase does the brunt of the work, looping through the implamentList
+    and implamenting the constructor functions on the this object. 
+
+    As well as implamenting the __isInstanceOf__ and Extend functionality in the
+    context of the newly implamented object.
+  */
+  , compile_phase = function(capture_args, implementContext) {
 
     // keep list of constructors implamented
-    var implaments = [],
-      capture_args = Array.prototype.slice.call(args, 0);
+    var implaments = [];
 
-    // run constructors on this object
-    for (var arg in args) {
-      if (args.hasOwnProperty(arg)) {
-        var fn = undefined,
-          thisArgs = undefined
-        switch (Object.prototype.toString.call(args[arg])) {
+    // If we are implamenting from a function bace 
+    // then add it to the implaments and capture_args list
+    if(!!implementContext) {
+      implaments.push(implementContext);
+      capture_args.push(implementContext);
+    }
+    
+    // 
+    for (var arg in capture_args) {
+      if (capture_args.hasOwnProperty(arg)) {
+
+        var fn = undefined, thisArgs = undefined
+        switch (Object.prototype.toString.call(capture_args[arg])) {
           // constructor fn stand alone
           case '[object Function]':
-            fn = args[arg];
+            fn = capture_args[arg];
             break;
-            // constructor fn with args // don't edit args array
+            // constructor fn with capture_args // don't edit capture_args array
           case '[object Array]':
-            fn = args[arg][0];
-            thisArgs = args[arg].slice(1);
+            fn = capture_args[arg][0];
+            thisArgs = capture_args[arg].slice(1);
             break;
         }
+
+        // run constructor function on this object
         fn.apply(this, thisArgs);
-        if (fn.prototype.constructor != fn) // apply prototype if different
-          fn.prototype.constructor.call(this);
+        // remember we implamented this constructor
         implaments.push(fn);
+      
       }
     }
 
@@ -81,6 +115,17 @@ Function.prototype.Implement = function() {
     delete this.__safe__;
     return this;
 
-  }).call(base, arguments);
+  };
+
+  // run
+  var base = prototype_phase(
+      implamentList
+    , implementContext
+  );
+  return compile_phase.call(
+      base
+    , implamentList
+    , implementContext
+  );
 
 };
