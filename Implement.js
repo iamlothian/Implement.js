@@ -17,8 +17,9 @@ Function.prototype.Implement = function() {
   , compile = function(capture_args, implementContext) {
 
     // keep list of constructors implamented
-    var implaments = [];
-    var _protected = null;
+    var implaments  = []
+      , _protected  = null  // track the protected scope
+      , __private   = null; // track the previous protected scope
 
     // If we are implamenting from a function bace 
     // then add it to the implaments and capture_args list
@@ -48,6 +49,9 @@ Function.prototype.Implement = function() {
         // run constructor function on this object
         fn.apply(this, thisArgs);
 
+        // moves the previous protected scope to the next constructor
+        __private = _protected;
+
         // remove access to the protected var scope  
         _protected = this._protected;
         delete this._protected; 
@@ -61,7 +65,7 @@ Function.prototype.Implement = function() {
             // provide access to the prototype methods and pass in the protected variable _protected
             this.constructor.prototype[method] = (function(_protected) {          
               return function() {
-                return fn_p.call(this, _protected);  
+                return fn_p.call(this, _protected, __private);  
               }
             }); 
 

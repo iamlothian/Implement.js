@@ -68,12 +68,13 @@ var p = function() {
 
   self.p = 20;
 }
-p.prototype.getProtected = function(_protected) {
+p.prototype.getProtected = function(_protected, __private) {
 
+  console.log(_protected, __private);
   return _protected;
   
 }
-p.prototype.showThis = function(_protected) {
+p.prototype.showThis = function(_protected, __private) {
 
   return this;
   
