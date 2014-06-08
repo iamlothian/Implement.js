@@ -118,10 +118,10 @@ Don't want to have methods instanced onto every object? Try this:
       var self = this;
       ...
     }
-    p.prototype.getProtected = function(_protected) {
+    p.prototype.getProtected = function(_protected, __private) {
       return _protected;
     }
-    p.prototype.showThis = function(_protected) {
+    p.prototype.showThis = function(_protected, __private) {
       return this;
     }
     
@@ -129,12 +129,12 @@ Don't want to have methods instanced onto every object? Try this:
         this._protected = { val: 10 };
     });
     
-`p` defined two prototype methods `getProtected` and `showThis`, these will become available to any implementation or extention of `p`. The prototype funcations have access to the this scope of the implemented object and are also passed the `_protected` scope, this is explained next.
+`p` defined two prototype methods `getProtected` and `showThis`, these will become available to any implementation or extention of `p`. The prototype funcations have access to the `this` scope of the implemented object and are also passed the current `_protected` scope and the previous `_protected` scope as `__private`, this is explained next.
 
 The `_protected` constructor function scope:
 ------------
 
-The above example is making use of the `_protected` scope varaible in a contructor. The `_protected` scope is not passed up the constructor chain, only the `_protected` scope of the last constructor in the chain will be passed to the prototype functions.
+The above example is making use of the `_protected` scope varaible in a contructor. Only the `_protected` scope of the last constructor in the chain will be passed to the prototype functions. The `_protected` scope of the previous constructor in  up the constructor chain to the 2nd prototype argument. 
 
 To use, just define `this._protected = {...};` in your constructor function. When the constructor is implamented this property will not be visable.
 
