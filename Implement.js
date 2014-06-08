@@ -7,37 +7,24 @@ Function.prototype.Implement = function() {
     implementContext = (Object.prototype.toString.call(this) === "[object Function]" && this.name != "Function") ? this : null
   , implamentList = Array.prototype.slice.call(arguments, 0)
 
-  /* 
-    The init_phase will Implement format [implicit OR explicit function] is checked and a new 
-    object is returned that will be the base of the implamentation
-  */
-  , init_phase = function(implamentList, implementContext){
-    
-    var _imp = function() { this.__safe__ = true; }; 
-
-    return (!!implementContext) ? 
-      new implementContext :  // explicit function
-      new _imp ;              // implicit
-
-  }
-
   /*
-    The compile_phase does the brunt of the work, looping through the implamentList
+    The compile phase does the brunt of the work, looping through the implamentList
     and implamenting the constructor functions on the this object. 
 
     As well as implamenting the __isInstanceOf__ and Extend functionality in the
     context of the newly implamented object.
   */
-  , compile_phase = function(capture_args, implementContext) {
+  , compile = function(capture_args, implementContext) {
 
     // keep list of constructors implamented
     var implaments = [];
+    var _protected = null;
 
     // If we are implamenting from a function bace 
     // then add it to the implaments and capture_args list
     if(!!implementContext) {
-      implaments.push(implementContext);
-      capture_args.push(implementContext);
+      implaments.unshift(implementContext);
+      capture_args.unshift(implementContext);
     }
     
     // compile all constructor functions in the passed 
@@ -61,25 +48,36 @@ Function.prototype.Implement = function() {
         // run constructor function on this object
         fn.apply(this, thisArgs);
 
-        // if constructor has prototype functions
-        for (var method in fn.prototype) 
-          // provide access to the prototype methods and pass in the protected variable _protected
-          this.constructor.prototype[method] = (function(_protected) {
-            var fn_p = fn.prototype[method]; // provide a closure for the proto funtion
-            return function() {
-              return fn_p.call(this, _protected);  
-            }
-
-          })(this._protected);
-
-        // remove access to the protected var scope
+        // remove access to the protected var scope  
+        _protected = this._protected;
         delete this._protected; 
+
+        // if constructor has prototype functions
+        for (var method in fn.prototype) {
+
+          // provide a closure for the proto funtion
+          (function (fn_p) {
+
+            // provide access to the prototype methods and pass in the protected variable _protected
+            this.constructor.prototype[method] = (function(_protected) {          
+              return function() {
+                return fn_p.call(this, _protected);  
+              }
+            }); 
+
+          }).call(this, fn.prototype[method]);
+
+        }     
         
         // remember we implamented this constructor
         implaments.push(fn);
       
       }
     }
+
+    // run protitype methods with the current _protected scope
+    for (var method in this.constructor.prototype)
+      this.constructor.prototype[method] = this.constructor.prototype[method](_protected);    
 
     // provide lookup check
     this.__isInstanceOf__ = function(constructor) {
@@ -118,7 +116,7 @@ Function.prototype.Implement = function() {
       };
 
       return obj;
-    }
+    };
 
     // remove __safe__ flag
     delete this.__safe__;
@@ -127,11 +125,11 @@ Function.prototype.Implement = function() {
   };
 
   // run
-  var base = init_phase(
-      implamentList
-    , implementContext
-  );
-  return compile_phase.call(
+  var base = new function() { 
+    this.__safe__ = true; 
+  };
+
+  return compile.call(
       base
     , implamentList
     , implementContext

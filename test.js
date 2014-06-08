@@ -66,7 +66,6 @@ var p = function() {
     throw new Error();
   var self = this;
 
-  self._protected = { val: 10 };
   self.p = 20;
 }
 p.prototype.getProtected = function(_protected) {
@@ -81,7 +80,7 @@ p.prototype.showThis = function(_protected) {
 }
 
 var withProto = p.Implement(function(){
-  this.data = 'hello world';
+  this._protected = { val: 10 };
 });
 
 console.log("\nwithProto = p.Implement(...):\n", withProto);
