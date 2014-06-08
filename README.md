@@ -56,9 +56,9 @@ The following syntax is also supported:
 
 This is a little unintuitive though and is intended for anonymous function:
 
-    var c = a.Implament(function(){
+    var anon = (function(){
         ...
-    });
+    })().Implament();
     
 Arguments and Contructors Function:
 ------------
@@ -116,31 +116,28 @@ Don't want to have methods instanced onto every object? Try this:
       if (!(( !! this && this.__safe__) || this instanceof p != 0))
         throw new Error();
       var self = this;
-    
-      // set arguments on the public scope to be passed to prototype
-      self.arguments = arguments;
+      ...
     }
-    p.prototype = new function() {
-    
-      // make protected
-      var _arguments = this.arguments;
-      delete this.arguments;
-    
-      this.someFunc = function() {
-        return _arguments;
-      }
+    p.prototype.getProtected = function(_protected) {
+      return _protected;
+    }
+    p.prototype.showThis = function(_protected) {
+      return this;
     }
     
-    var withProto = Function.Implement([p, 'hello', 'world']);
+    var withProto = p.Implement(function(){
+        this._protected = { val: 10 };
+    });
     
-    console.log("\nwithProto = Function.Implement([p,'hello','world']):\n", withProto);
-    console.log(
-      "\nwithProto.__isInstanceOf__(p):" + withProto.__isInstanceOf__(p) // true
-    );
+`p` defined two prototype methods `getProtected` and `showThis`, these will become available to any implementation or extention of `p`. The prototype funcations have access to the this scope of the implemented object and are also passed the `_protected` scope, this is explained next.
 
+The `_protected` constructor function scope:
+------------
 
+The above example is making use of the `_protected` scope varaible in a contructor. The `_protected` scope is not passed up the constructor chain, only the `_protected` scope of the last constructor in the chain will be passed to the prototype functions.
 
-TODO: Continue writing instructions
+To use, just define `this._protected = {...};` in your constructor function. When the constructor is implamented this property will not be visable.
+
 
 Road Map
 ============
