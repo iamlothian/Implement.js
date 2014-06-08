@@ -66,13 +66,18 @@ var p = function() {
     throw new Error();
   var self = this;
 
-  // set arguments on the public scope to be passed to prototype
-  self.arguments = arguments;
+  self._protected = { val: 10 };
+  self.p = 20;
 }
-p.prototype.someFunc = function() {
-  this.someFunc = function() {
-    return this.data;
-  }
+p.prototype.getProtected = function(_protected) {
+
+  return _protected;
+  
+}
+p.prototype.showThis = function(_protected) {
+
+  return this;
+  
 }
 
 var withProto = p.Implement(function(){
