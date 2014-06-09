@@ -27,10 +27,15 @@ A constructor function is any function intended to be called with the `new` oper
 Now you're knee deep:
 ------------
 
+If you're not familiar with the concepts of prototypal javascript then I suggest some reading:
+
 There is much more to it than that though so i suggest you read:
 [JavaScript constructors, prototypes, and the `new` keyword](http://pivotallabs.com/javascript-constructors-prototypes-and-the-new-keyword/)
 
-NOTE: Implements makes no assumption about your contractors, so you should write you own guard code. Here is an example:
+A summary of common inheritance patterns, some employed by this framework: 
+[javascript-inheritance-patterns](http://davidshariff.com/blog/javascript-inheritance-patterns/)
+
+*NOTE*: Implements makes no assumption about your contractors, so you should write you own guard code. Here is an example:
 [Basic JavaScript Part 4: Enforcing New on Constructor Functions](http://elegantcode.com/2010/12/21/basic-javascript-part-4-enforcing-new-on-constructor-functions/)
 
 ... Now that you are familiar with these consept, back to Implament.js. 
