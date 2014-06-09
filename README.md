@@ -1,11 +1,13 @@
 Implement.js
 ============
 
+A minimal javascript module pattern with constructor chain management.
+
 So in javascript you're used to doing this:
 
     var myObj = new function() { // constructor function };
     
-But what if you wanted to combine multiple constructor functions into one object? Well that is the intent of Implements.js, to provide the meens to do so. 
+But what if you wanted to combine multiple constructor functions into one object? Well that is the intent of Implements.js, to provide the means to do so. 
 
 Let's start very simple:
 ------------
@@ -28,7 +30,7 @@ Now you're knee deep:
 There is much more to it than that though so i suggest you read:
 [JavaScript constructors, prototypes, and the `new` keyword](http://pivotallabs.com/javascript-constructors-prototypes-and-the-new-keyword/)
 
-NOTE: Implaments makes no assumption about your contructors, so you should write you own guard code. Here is an example:
+NOTE: Implements makes no assumption about your contractors, so you should write you own guard code. Here is an example:
 [Basic JavaScript Part 4: Enforcing New on Constructor Functions](http://elegantcode.com/2010/12/21/basic-javascript-part-4-enforcing-new-on-constructor-functions/)
 
 ... Now that you are familiar with these consept, back to Implament.js. 
@@ -38,7 +40,7 @@ Getting started:
 
 What you would not have seen in those examples is something like this:
 
-Object `c` implaments (in order) `a` and `b`
+Object `c` implements (in order) `a` and `b`
 
     var a = function(){
         this.propa = 'a';
@@ -48,22 +50,22 @@ Object `c` implaments (in order) `a` and `b`
     }
     var c = Function.Implement(a, b); // -> { propa: 'a', propb: 'b' }
     
-`c` is a new object with the properties of both `a` and `b`. Notice the use of `Function` rather than `function`. The `Implement` function is a part of the base javascript Function prototype; any javascript function can be implamented.
+`c` is a new object with the properties of both `a` and `b`. Notice the use of `Function` rather than `function`. The `Implement` function is a part of the base javascript Function prototype; any javascript function can be implemented.
 
 The following syntax is also supported:
 
-    var c = a.Implament(b); // -> { propa: 'a', propb: 'b' }
+    var c = a.Implement(b); // -> { propa: 'a', propb: 'b' }
 
 This is a little unintuitive though and is intended for anonymous function:
 
     var anon = (function(){
         ...
-    })().Implament();
+    })().Implement();
     
-Arguments and Contructors Function:
+Arguments and Contractor Functions:
 ------------
 
-If a contructor function requires arguments use an array `[constructor, arg1, arg2, ...]` to specify the arguments:
+If a constructor function requires arguments use an array `[constructor, arg1, arg2, ...]` to specify the arguments:
 
     var a = function(n){
         this.propa = n;
@@ -77,18 +79,18 @@ If a contructor function requires arguments use an array `[constructor, arg1, ar
 Instance Checking:
 ------------
 
-Using the built in `instanceof` operator will not work on implamented functions as the resulting objects constructor is not a single function constructor. 
+Using the built in `instanceof` operator will not work on implemented functions as the resulting objects constructor is not a single function constructor. 
 
-For this reason implamented function gain the `__InstanceOf__` method. This method gives you the ability to check weather an implamented object was created using a specific constructr function.
+For this reason implemented function gain the `__InstanceOf__` method. This method gives you the ability to check weather an implemented object was created using a specific constructor function.
 
     c.__InstanceOf__(a)         // -> true
     c.__InstanceOf__(b)         // -> true
     c.__InstanceOf__(Function)  // -> true : every implamented object is an __InstanceOf__ Function
     
-Extending Implamented Constructors:
+Extending Implemented Constructors:
 ------------
     
-Implamented function also gain the `Extend` method, which is used to extend implamented function further.
+Implemented function also gain the `Extend` method, which is used to extend implemented function further.
 
     //...
     var d = c.Extend(function(){
@@ -96,9 +98,9 @@ Implamented function also gain the `Extend` method, which is used to extend impl
     });
     // -> { propa: 10, propb: 'bd' }
     
-`d` is a new objcet that implaments the same constructors as `c` and extends `c` with any other constructor functions just as `Implement` would.
+`d` is a new object that implements the same constructors as `c` and extends `c` with any other constructor functions just as `Implement` would.
 
-Notice `propa` is set to 10, this is because the implamentation arguments are remembered and used when implamenting `a` on `d`. once all of `c`'s constructors have been run, the extending constructors are run. In the above example the an anonymous constructor function is adding 'd' to the `propb` property set by the `b` constructor.
+Notice `propa` is set to 10, this is because the implementation arguments are remembered and used when implementing `a` on `d`. once all of `c`'s constructors have been run, the extending constructors are run. In the above example the an anonymous constructor function is adding 'd' to the `propb` property set by the `b` constructor.
     
 `__InstanceOf__` will also work on extended objects
 
@@ -129,17 +131,17 @@ Don't want to have methods instanced onto every object? Try this:
         this._protected = { val: 10 };
     });
     
-`p` defined two prototype methods `getProtected` and `showThis`, these will become available to any implementation or extention of `p`. The prototype funcations have access to the `this` scope of the implemented object and are also passed the current `_protected` scope and the previous `_protected` scope as `__private`, this is explained next.
+`p` defined two prototype methods `getProtected` and `showThis`, these will become available to any implementation or extension of `p`. The prototype functions have access to the `this` scope of the implemented object and are also passed the current `_protected` scope and the previous `_protected` scope as `__private`, this is explained next.
 
 The `_protected` constructor function scope:
 ------------
 
-The above example is making use of the `_protected` scope varaible in a contructor. Only the `_protected` scope of the last constructor in the chain will be passed to the prototype functions. The `_protected` scope of the previous constructor in  up the constructor chain to the 2nd prototype argument. 
+The above example is making use of the `_protected` scope variable in a constructor. Only the `_protected` scope of the last constructor in the chain will be passed to the prototype functions. The `_protected` scope of the previous constructor in  up the constructor chain to the 2nd prototype argument. 
 
-To use, just define `this._protected = {...};` in your constructor function. When the constructor is implamented this property will not be visable.
+To use, just define `this._protected = {...};` in your constructor function. When the constructor is implemented this property will not be visible.
 
 
 Road Map
 ============
 
-Things to do and improvments...
+Things to do and improvements...
