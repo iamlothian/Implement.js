@@ -1,7 +1,14 @@
 Implement.js
 ============
 
-A minimal javascript module pattern with constructor chain management.
+What is it?
+-----------
+
+Implement.js is a minimal javascript module pattern with constructor chain management, filling a gap in the (already saturated) marked of javascript "things". 
+
+Surprisingly this pattern and functionality has not been sufficiently covered yet. Implement.js isn't trying to shadow or implement any other language. The goal is to take the powerful and somewhat messy things of javascript, like prototypes, constructor functions and multiple inheritances, and make them easy and simple to manage.
+
+***
 
 So in javascript you're used to doing this:
 
@@ -182,6 +189,8 @@ Don't do this, Implement.js will do it for you.
     myThis                  // -> {__safe__:true, someProp:'hello world'}
 
 Another thing to node is `var self = this;` will alias or enclose the current this scope of your constructor, so that any detached functions will not loose there scope if passed around outside the constructor.
+
+***
 
 Road Map
 ============
