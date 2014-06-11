@@ -145,6 +145,43 @@ The above example is making use of the `_protected` scope variable in a construc
 
 To use, just define `this._protected = {...};` in your constructor function. When the constructor is implemented this property will not be visible.
 
+Constructor guarding and `this.__safe__`:
+------------
+
+During the construction phase of implementation you might want to provide a guard to stop you constructor being called as a normal function. This is usually accomplished via  `this instanceof [Function name]` within the constructor, but implements does not always use the `new` operator to create your constructor.
+
+For this reason, during the construction phase the `this` object will contain a  `__safe__` property set to true, if the function was implemented by Implement.js. 
+
+The following is an example that check that: 
+* The `this` object is not undefined or null
+* And check that `this.__safe__` is set
+* Or `this` is an instanceof myThing
+
+If any of these fail the error will be thrown
+
+    var myThing = function() {
+        // constructor Guard
+        if (!(( !! this && this.__safe__) || this instanceof myThing != 0))
+            throw new Error('Constructor Guard Error');
+            
+        // this aliasing
+        var self = this;
+        self.someProp = 'hello world'
+    }
+    
+    new myThing()            // -> Pass     
+    myThing()                // -> Fail
+    myThing.call(null)       // -> Fail
+    myThing.call(undefined)  // -> Fail
+    myThing.call(this)       // -> Fail
+    
+Don't do this, Implement.js will do it for you.
+    
+    var myThis = {__safe__:true};
+    myThing.call(myThis);   // -> Pass
+    myThis                  // -> {__safe__:true, someProp:'hello world'}
+
+Another thing to node is `var self = this;` will alias or enclose the current this scope of your constructor, so that any detached functions will not loose there scope if passed around outside the constructor.
 
 Road Map
 ============
