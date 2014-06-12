@@ -190,6 +190,33 @@ Don't do this, Implement.js will do it for you.
 
 Another thing to node is `var self = this;` will alias or enclose the current this scope of your constructor, so that any detached functions will not loose there scope if passed around outside the constructor.
 
+Impementing and Extending Native Objects
+------------
+
+Implements also supports native objects like `Array` and `Date`. The exeption is `Function` and `Object` as these are base types and most of the time the results alreay are functions or objects. Native object can not be combined though, you can't have a a DateArray sorry (Not sure it would even make sence to do so).
+
+To do this we must use the explicit Implementation format:
+
+    var myArray = Array.Implement();
+    
+You can extend the Implement as you would any other contructor:
+
+    var autoArray = Array.Implement(function(){
+        // auto fill
+        var self = this;
+        (function init(self){
+          self.splice(0,0,'auto','filled','by','constructor');
+        })(self);
+    });
+
+And even:
+
+    var arry_proto_Fns = new Function();
+    arry_proto_Fns.prototype.myArrayFn = function(){
+      return this;
+    }
+    var betterArray = autoArray.Extend(arry_proto_Fns);
+    
 ***
 
 Road Map
