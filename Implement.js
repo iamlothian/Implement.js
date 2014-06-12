@@ -1,4 +1,4 @@
-/* Function.prototype.Implement - 0.2.1; Copyright (c) 2014, Matthew Lothian; http://www.opensource.org/licenses/MIT */
+/* Function.prototype.Implement - 0.2.2; Copyright (c) 2014, Matthew Lothian; http://www.opensource.org/licenses/MIT */
 Function.prototype.Implement = function() {
 
   'use strict';

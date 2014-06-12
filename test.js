@@ -88,3 +88,32 @@ console.log("\nwithProto = p.Implement(...):\n", withProto);
 console.log(
   "\nwithProto.__isInstanceOf__(p):" + withProto.__isInstanceOf__(p) // true
 );
+
+
+var myArray = Array.Implement(function(){
+    // auto fill
+    var self = this;
+    (function init(self){
+      self.splice(0,0,'auto','filled','by','constructor');
+    })(self);
+});
+
+console.log("\nArray.Implement(...):\n", myArray);
+console.log(
+  "\nmyArray.__isInstanceOf__(Array):" + myArray.__isInstanceOf__(Array) // true
+);
+
+var arry_proto_Fns = new Function();
+arry_proto_Fns.prototype.myArrayFn = function(){
+  return this;
+}
+var betterArray = myArray.Extend(arry_proto_Fns);
+ 
+
+console.log("\nmyArray.Extend(arry_proto_Fns):\n", betterArray);
+console.log(
+  "\nbetterArray.__isInstanceOf__(Array):" + betterArray.__isInstanceOf__(Array) // true
+  , "\nbetterArray.__isInstanceOf__(myArrayFn):" + betterArray.__isInstanceOf__(arry_proto_Fns) // true
+  , "\nbetterArray.__isInstanceOf__(arry_proto_Fns):" + betterArray.__isInstanceOf__(arry_proto_Fns) // true
+);
+
