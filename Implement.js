@@ -2,10 +2,16 @@
 Function.prototype.Implement = function() {
 
   'use strict';
-  
+
   var 
     implementContext = (Object.prototype.toString.call(this) === "[object Function]" && this.name != "Function") ? this : null
   , implamentList = Array.prototype.slice.call(arguments, 0)
+
+  , isNativeCode = function(constructor){
+      return (constructor.toString().split(/[\{\}]/g)[1] === " [native code] " 
+        && Object.prototype.toString.call(constructor) === "[object Function]"
+        && constructor.name != "Function"); 
+  }
 
   /*
     The compile phase does the brunt of the work, looping through the implamentList
@@ -95,7 +101,12 @@ Function.prototype.Implement = function() {
 
     // provide object extend by reimplamenting this object with more constructors
     this.Extend = function() {
-      var obj = Function.Implement.apply(Function, [].concat(
+
+      // support extending object where the base is a native object like "Array"
+      var _base = isNativeCode(capture_args[0])? capture_args[0] : Function
+
+      // reimplement constructor chain
+      var obj = Function.Implement.apply(_base, [].concat(
         capture_args,
         Array.prototype.slice.call(arguments, 0)
       ));
@@ -128,9 +139,15 @@ Function.prototype.Implement = function() {
 
   };
 
-  // run
-  var base = new function() { 
-    this.__safe__ = true; 
+  // the base of the new this object
+  var base;
+  // support baseing off native object like "Array"
+  if (isNativeCode(this)) {
+    base = new this;
+  } else {
+    base = new function() { 
+      this.__safe__ = true; 
+    }
   };
 
   return compile.call(
