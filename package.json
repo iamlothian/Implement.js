@@ -1,0 +1,28 @@
+{
+  "name": "Implement.js",
+  "version": "0.2.2",
+  "description": "Implement.js is a minimal javascript module pattern with constructor chain management.",
+  "main": "Implement.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iamlothian/Implement.js.git"
+  },
+  "author": "@iamlothian",
+  "license": "(MIT)",
+  "bugs": {
+    "url": "https://github.com/iamlothian/Implement.js/issues"
+  },
+  "homepage": "https://github.com/iamlothian/Implement.js",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-bowercopy": "^1.0.1",
+    "grunt-contrib-jasmine": "^0.6.5",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-istanbul": "^0.3.0"
+  }
+}

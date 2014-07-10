@@ -4,13 +4,13 @@ Function.prototype.Implement = function() {
   'use strict';
 
   var 
-    implementContext = (Object.prototype.toString.call(this) === "[object Function]" && this.name != "Function") ? this : null
+    implementContext = (Object.prototype.toString.call(this) === "[object Function]" && this.name !== "Function") ? this : null
   , implamentList = Array.prototype.slice.call(arguments, 0)
 
   , isNativeCode = function(constructor){
-      return (constructor.toString().split(/[\{\}]/g)[1] === " [native code] " 
-        && Object.prototype.toString.call(constructor) === "[object Function]"
-        && constructor.name != "Function"); 
+      return (constructor.toString().split(/[\{\}]/g)[1] === " [native code] " &&
+        Object.prototype.toString.call(constructor) === "[object Function]" &&
+        constructor.name !== "Function"); 
   }
 
   /*
@@ -39,7 +39,7 @@ Function.prototype.Implement = function() {
     for (var arg in capture_args) {
       if (capture_args.hasOwnProperty(arg)) {
 
-        var fn = undefined, thisArgs = undefined
+        var fn, thisArgs;
         switch (Object.prototype.toString.call(capture_args[arg])) {
           // constructor fn stand alone
           case '[object Function]':
@@ -63,19 +63,19 @@ Function.prototype.Implement = function() {
         delete this._protected; 
 
         // if constructor has prototype functions
-        for (var method in fn.prototype) {
+        for (var method_signiture in fn.prototype) {
 
           // provide a closure for the proto funtion
           (function (fn_p) {
 
             // provide access to the prototype methods and pass in the protected variable _protected
-            this.constructor.prototype[method] = (function(_protected) {          
+            this.constructor.prototype[method_signiture] = (function(_protected) {          
               return function() {
                 return fn_p.call(this, _protected, __private);  
-              }
+              };
             }); 
 
-          }).call(this, fn.prototype[method]);
+          }).call(this, fn.prototype[method_signiture]);
 
         }     
         
@@ -86,8 +86,9 @@ Function.prototype.Implement = function() {
     }
 
     // run protitype methods with the current _protected scope
-    for (var method in this.constructor.prototype)
-      this.constructor.prototype[method] = this.constructor.prototype[method](_protected);    
+    for (var proto_method_signiture in this.constructor.prototype){
+      this.constructor.prototype[proto_method_signiture] = this.constructor.prototype[proto_method_signiture](_protected);    
+    }
 
     // provide lookup check
     this.__isInstanceOf__ = function(constructor) {
@@ -103,7 +104,7 @@ Function.prototype.Implement = function() {
     this.Extend = function() {
 
       // support extending object where the base is a native object like "Array"
-      var _base = isNativeCode(capture_args[0])? capture_args[0] : Function
+      var _base = isNativeCode(capture_args[0])? capture_args[0] : Function;
 
       // reimplement constructor chain
       var obj = Function.Implement.apply(_base, [].concat(
@@ -121,8 +122,9 @@ Function.prototype.Implement = function() {
         ((Object.prototype.toString.call(constructor) === "[object Object]" && !! constructor.__isInstanceOf__) &&
           (function() {
             for (var imp in extending) {
-              if (!constructor.__isInstanceOf__(extending[imp]))
+              if (!constructor.__isInstanceOf__(extending[imp])){
                 return false;
+              }
             }
             return true;
           })()) ||
@@ -143,12 +145,10 @@ Function.prototype.Implement = function() {
   var base;
   // support baseing off native object like "Array"
   if (isNativeCode(this)) {
-    base = new this;
+    base = new this();
   } else {
-    base = new function() { 
-      this.__safe__ = true; 
-    }
-  };
+    base = { __safe__: true };
+  }
 
   return compile.call(
       base
