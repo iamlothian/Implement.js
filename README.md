@@ -42,7 +42,7 @@ There is much more to it than that though so i suggest you read:
 A summary of common inheritance patterns, some employed by this framework: 
 [javascript-inheritance-patterns](http://davidshariff.com/blog/javascript-inheritance-patterns/)
 
-*NOTE*: Implements makes no assumption about your contractors, so you should write you own guard code. Here is an example:
+*NOTE*: Implements makes no assumption about your constructors, so you should write you own guard code. Here is an example:
 [Basic JavaScript Part 4: Enforcing New on Constructor Functions](http://elegantcode.com/2010/12/21/basic-javascript-part-4-enforcing-new-on-constructor-functions/)
 
 ... Now that you are familiar with these consept, back to Implament.js. 
@@ -74,7 +74,7 @@ This is a little unintuitive though and is intended for anonymous function:
         ...
     })().Implement();
     
-Arguments and Contractor Functions:
+Arguments and Constructor Functions:
 ------------
 
 If a constructor function requires arguments use an array `[constructor, arg1, arg2, ...]` to specify the arguments:

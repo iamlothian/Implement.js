@@ -64,19 +64,20 @@ Function.prototype.Implement = function() {
 
         // if constructor has prototype functions
         for (var method_signiture in fn.prototype) {
-
-          // provide a closure for the proto funtion
-          (function (fn_p) {
-
-            // provide access to the prototype methods and pass in the protected variable _protected
-            this.constructor.prototype[method_signiture] = (function(_protected) {          
-              return function() {
-                return fn_p.call(this, _protected, __private);  
-              };
-            }); 
-
-          }).call(this, fn.prototype[method_signiture]);
-
+          // make sure this proto funtion hasn't already been proxied
+          if (fn.prototype[method_signiture].name !== 'proxy_proto') { 
+            // provide a closure for the proto funtion
+            (function (fn_p) {
+              // provide a proxy access to the prototype method that accepts the current context of execution
+              this.constructor.prototype[method_signiture] = (function proxy_proto(_protected, __private) { 
+                // this function is what will be called when you request the prototype[method_signiture]       
+                return function() {
+                  // calls the original prototype with this context
+                  return fn_p.call(this, _protected, __private);  
+                };
+              }); 
+            }).call(this, fn.prototype[method_signiture]);
+          }
         }     
         
         // remember we implamented this constructor
@@ -85,9 +86,9 @@ Function.prototype.Implement = function() {
       }
     }
 
-    // run protitype methods with the current _protected scope
+    // run prototype proxy methods with the current _protected and __private context
     for (var proto_method_signiture in this.constructor.prototype){
-      this.constructor.prototype[proto_method_signiture] = this.constructor.prototype[proto_method_signiture](_protected);    
+      this.constructor.prototype[proto_method_signiture] = this.constructor.prototype[proto_method_signiture](_protected, __private);    
     }
 
     // provide lookup check

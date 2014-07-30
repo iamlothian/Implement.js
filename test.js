@@ -68,20 +68,23 @@ var p = function() {
 
   self.p = 20;
 }
-p.prototype.getProtected = function(_protected, __private) {
+p.prototype.getProtected = function(_protected, __private, args) {
 
-  console.log(_protected, __private);
+  console.log(_protected, __private, args);
   return _protected;
   
 }
-p.prototype.showThis = function(_protected, __private) {
+p.prototype.showThis = function(_protected, __private, args) {
 
   return this;
   
 }
 
-var withProto = p.Implement(function(){
-  this._protected = { val: 10 };
+var withProto = p.Implement(
+  function(){
+    this._protected = { val: 10 };
+},function(){
+    this._protected = { val: 20 };
 });
 
 console.log("\nwithProto = p.Implement(...):\n", withProto);

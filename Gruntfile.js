@@ -70,7 +70,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     //tasks.
-    grunt.registerTask('default', ['jshint', 'jasmine','bowercopy','uglify']);
+    grunt.registerTask('default', ['jshint', 'jasmine', 'bowercopy','uglify']);
 
     //grunt.registerTask('default', ['bowercopy', 'less', 'uglify', 'watch']);
 
