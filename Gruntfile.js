@@ -39,9 +39,9 @@ module.exports = function(grunt) {
         },
         uglify: {
             options: {
-                mangle: grunt.config('compress'),
-                compress: grunt.config('compress'),
-                beautify: !grunt.config('compress'),
+                mangle: true,
+                compress: true,
+                beautify: false,
                 sourceMap: true
             },
             build: {

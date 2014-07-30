@@ -93,11 +93,11 @@ Instance Checking:
 
 Using the built in `instanceof` operator will not work on implemented functions as the resulting objects constructor is not a single function constructor. 
 
-For this reason implemented function gain the `__InstanceOf__` method. This method gives you the ability to check weather an implemented object was created using a specific constructor function.
+For this reason implemented function gain the `__isInstanceOf__` method. This method gives you the ability to check weather an implemented object was created using a specific constructor function.
 
-    c.__InstanceOf__(a)         // -> true
-    c.__InstanceOf__(b)         // -> true
-    c.__InstanceOf__(Function)  // -> true : every implamented object is an __InstanceOf__ Function
+    c.__isInstanceOf__(a)         // -> true
+    c.__isInstanceOf__(b)         // -> true
+    c.__isInstanceOf__(Function)  // -> true : every implamented object is an __isInstanceOf__ Function
     
 Extending Implemented Constructors:
 ------------
@@ -114,12 +114,12 @@ Implemented function also gain the `Extend` method, which is used to extend impl
 
 Notice `propa` is set to 10, this is because the implementation arguments are remembered and used when implementing `a` on `d`. once all of `c`'s constructors have been run, the extending constructors are run. In the above example the an anonymous constructor function is adding 'd' to the `propb` property set by the `b` constructor.
     
-`__InstanceOf__` will also work on extended objects
+`__isInstanceOf__` will also work on extended objects
 
-    d.__InstanceOf__(a)         // -> true
-    d.__InstanceOf__(b)         // -> true
-    d.__InstanceOf__(c)         // -> true
-    d.__InstanceOf__(Function)  // -> true
+    d.__isInstanceOf__(a)         // -> true
+    d.__isInstanceOf__(b)         // -> true
+    d.__isInstanceOf__(c)         // -> true
+    d.__isInstanceOf__(Function)  // -> true
     
 Implaments and Function prototype:
 ------------
