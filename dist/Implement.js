@@ -1,3 +1,13 @@
+/* Polyfill Object.setPrototypeOf */
+Object.setPrototypeOf = Object.setPrototypeOf || function (obj, proto) {
+  obj.__proto__ = proto;
+  return obj; 
+};
+/* Polyfill Object.getPrototypeOf */
+Object.getPrototypeOf = Object.getPrototypeOf || function (obj) {
+  return obj.__proto__; 
+};
+
 /* Function.prototype.Implement - 0.2.2; Copyright (c) 2014, Matthew Lothian; http://www.opensource.org/licenses/MIT */
 Function.prototype.Implement = function() {
 
@@ -25,7 +35,8 @@ Function.prototype.Implement = function() {
     // keep list of constructors implamented
     var implaments  = []
       , _protected  = null  // track the protected scope
-      , __private   = null; // track the previous protected scope
+      , __private   = null  // track the previous protected scope
+      , thisProto   = Object.getPrototypeOf(this);
 
     // If we are implamenting from a function bace 
     // then add it to the implaments and capture_args list
@@ -69,11 +80,13 @@ Function.prototype.Implement = function() {
             // provide a closure for the proto funtion
             (function (fn_p) {
               // provide a proxy access to the prototype method that accepts the current context of execution
-              this.constructor.prototype[method_signiture] = (function proxy_proto(_protected, __private) { 
+              thisProto[method_signiture] = (function proxy_proto(_protected, __private) { 
+              //this.constructor.prototype[method_signiture] = (function proxy_proto(_protected, __private) { 
                 // this function is what will be called when you request the prototype[method_signiture]       
                 return function() {
+                  var args = Array.prototype.slice.call(arguments, 0);
                   // calls the original prototype with this context
-                  return fn_p.call(this, _protected, __private);  
+                  return fn_p.call(this, _protected, __private, args);  
                 };
               }); 
             }).call(this, fn.prototype[method_signiture]);
@@ -87,8 +100,10 @@ Function.prototype.Implement = function() {
     }
 
     // run prototype proxy methods with the current _protected and __private context
-    for (var proto_method_signiture in this.constructor.prototype){
-      this.constructor.prototype[proto_method_signiture] = this.constructor.prototype[proto_method_signiture](_protected, __private);    
+    for (var proto_method_signiture in thisProto){
+      if (Object.prototype.toString.call(thisProto[proto_method_signiture]) === "[object Function]"){
+        thisProto[proto_method_signiture] = thisProto[proto_method_signiture](_protected, __private); 
+      }   
     }
 
     // provide lookup check
@@ -143,12 +158,12 @@ Function.prototype.Implement = function() {
   };
 
   // the base of the new this object
-  var base;
+  var base = {};
   // support baseing off native object like "Array"
   if (isNativeCode(this)) {
     base = new this();
   } else {
-    base = { __safe__: true };
+    base = Object.create({ __safe__: true });
   }
 
   return compile.call(

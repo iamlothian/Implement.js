@@ -14,7 +14,8 @@ module.exports = function(grunt) {
                 eqnull: true,
                 browser: true,
                 laxcomma: true,
-                '-W083': true
+                '-W083': true,
+                proto: true
             },
             files: ['src/**/*.js']
         },

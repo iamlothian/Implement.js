@@ -1,3 +1,13 @@
+/* Polyfill Object.setPrototypeOf */
+Object.setPrototypeOf = Object.setPrototypeOf || function (obj, proto) {
+  obj.__proto__ = proto;
+  return obj; 
+};
+/* Polyfill Object.getPrototypeOf */
+Object.getPrototypeOf = Object.getPrototypeOf || function (obj) {
+  return obj.__proto__; 
+};
+
 /* Function.prototype.Implement - 0.2.2; Copyright (c) 2014, Matthew Lothian; http://www.opensource.org/licenses/MIT */
 Function.prototype.Implement = function() {
 
@@ -25,7 +35,8 @@ Function.prototype.Implement = function() {
     // keep list of constructors implamented
     var implaments  = []
       , _protected  = null  // track the protected scope
-      , __private   = null; // track the previous protected scope
+      , __private   = null  // track the previous protected scope
+      , thisProto   = Object.getPrototypeOf(this);
 
     // If we are implamenting from a function bace 
     // then add it to the implaments and capture_args list
@@ -61,8 +72,6 @@ Function.prototype.Implement = function() {
         // remove access to the protected var scope  
         _protected = this._protected;
         delete this._protected; 
-
-        var thisProto = Object.getPrototypeOf(this);
 
         // if constructor has prototype functions
         for (var method_signiture in fn.prototype) {

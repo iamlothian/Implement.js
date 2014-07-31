@@ -198,7 +198,6 @@ describe("Function.Implement", function() {
 
 		it("the prototypes has access to arguments passed to it", function(){
 			var result = withProto.getArguments('arg');
-			console.log(result[0]);
 			expect(result).toBeDefined();
 			expect(result[0]).toEqual('arg');
 		});
