@@ -159,6 +159,33 @@ Don't do this, Implement.js will do it for you.
 
 Another thing to note is `var self = this;` will alias or enclose the current this scope of your constructor, so that any detached functions will not loose there scope if passed around outside the constructor.
 
+Constructor & Prototypes
+============
+
+It is possible to add prototype functions to constructor functions in a way that will allow them to be implemented and extended
+
+    // constructor function
+    var A = function A() {
+        //...
+        var _self = this;
+        // keep reference to this prototype
+        var _proto = this.constructor.prototype;
+        _self.name = "A";
+     
+        // add function to prototype
+        _proto.getName = function(){
+            // use 'this' reference so that prototype function is portable
+            return this.name;
+        };
+        //...
+    };
+
+Native Object Types
+============
+
+You can extends and implent using native objects like `Array` and  `String` by using the explicit implementation method
+
+    Array.Implement(function(){...}, ...);
 
 Road Map
 ============
