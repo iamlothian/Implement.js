@@ -134,6 +134,7 @@ describe("Function.Implement", function() {
 
 	});
 
+	/*
 	// prototypes
 	describe("constructors with prototypes", function() {
 
@@ -200,6 +201,42 @@ describe("Function.Implement", function() {
 			var result = withProto.getArguments('arg');
 			expect(result).toBeDefined();
 			expect(result[0]).toEqual('arg');
+		});
+
+	});
+	*/
+
+	describe("constructors with prototypes", function() {
+
+		var p = function() {
+			var self = this;
+			var proto = this.constructor.prototype;
+			self._protected = 1
+			self.prop = 3;
+
+			proto.getThis = function() {
+			  return this
+			};
+		};
+
+		it("prototypes are not global", function(){
+			expect(Object.getProtected).toBeUndefined();
+		});
+
+		var withProto = p.Implement();
+
+		it("can be implemented like normal constructor functions", function(){
+			expect(withProto.__isInstanceOf__(p)).toBe(true);
+		});
+
+		it("the prototypes have been implemented", function(){
+			expect(withProto.getThis).toBeDefined();
+		});
+
+		var withProtoExtended = withProto.Extend();
+
+		it("prototypes are carried to Extended instances", function(){
+			expect(withProtoExtended.getThis).toBeDefined();
 		});
 
 	});

@@ -1,16 +1,56 @@
 
-var _final = function(value) {
-	// make sure we can't call this as a function, and that this 
-	// is always an object
-	if (!(( !! this && this.__safe__) || this instanceof _private != 0))
-		throw new Error();
+// #################
+// using prototypes
+// #################
 
-	var _value = value;
+var x = 1;
+var xx = x;
 
-	// keep a local reference to this
-	// so it doesn't get lost in extension
-	var self = this;
-
+var A = function A() {
+  
+  var _self = this;
+  var _proto = this.constructor.prototype;
+  _self.name = "A";
+ 
+  _proto.getName = function(){
+    return this.name;
+  };
+  
 };
 
+var B = function B() {
+  
+  var _self = this;
+  var _proto = this.constructor.prototype;
+  _self.name = "B";
+ 
+  _proto.Speek = function(){
+    return "Hello" + this.name;
+  };
 
+  var x = 1;
+
+  _proto.age = function(){
+    return x;
+  };
+  
+};
+
+var A1 = new A();
+var A2 = A.Implement();
+var A3 = Function.Implement(A, B);
+
+var B = A3.Extend(function(){
+
+  var _self = this;
+  var _proto = this.constructor.prototype;
+  _self.name = "BB";
+
+  var x = 2;
+
+})
+
+console.log(A1, A1.getName());
+console.log(A2, A2.getName());
+console.log(A3, A3.getName());
+console.log(B, B.getName());
