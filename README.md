@@ -157,7 +157,7 @@ Don't do this, Implement.js will do it for you.
     myThing.call(myThis);   // -> Pass
     myThis                  // -> {__safe__:true, someProp:'hello world'}
 
-Another thing to node is `var self = this;` will alias or enclose the current this scope of your constructor, so that any detached functions will not loose there scope if passed around outside the constructor.
+Another thing to note is `var self = this;` will alias or enclose the current this scope of your constructor, so that any detached functions will not loose there scope if passed around outside the constructor.
 
 
 Road Map
