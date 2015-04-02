@@ -73,8 +73,6 @@ module.exports = function(grunt) {
     //tasks.
     grunt.registerTask('default', ['jshint', 'jasmine', 'bowercopy','uglify']);
 
-    //grunt.registerTask('default', ['bowercopy', 'less', 'uglify', 'watch']);
 
-    //grunt.registerTask('rebuild', ['bowercopy','less','uglify'])
 
 };

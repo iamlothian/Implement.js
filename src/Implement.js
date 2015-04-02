@@ -5,7 +5,7 @@ Function.prototype.Implement = function() {
 
   var 
     implementContext = (Object.prototype.toString.call(this) === "[object Function]" && this.name !== "Function") ? this : null
-  , implamentList = Array.prototype.slice.call(arguments, 0)
+  , implementList = Array.prototype.slice.call(arguments, 0)
 
   , isNativeCode = function(constructor){
       return (constructor.toString().split(/[\{\}]/g)[1] === " [native code] " &&
@@ -14,24 +14,24 @@ Function.prototype.Implement = function() {
   }
 
   /*
-    The compile phase does the brunt of the work, looping through the implamentList
-    and implamenting the constructor functions on the this object. 
+    The compile phase does the brunt of the work, looping through the implementList
+    and _implementing the constructor functions on the this object. 
 
-    As well as implamenting the __isInstanceOf__ and Extend functionality in the
-    context of the newly implamented object.
+    As well as _implementing the __isInstanceOf__ and Extend functionality in the
+    context of the newly _implemented object.
   */
   , compile = function(capture_args, implementContext) {
 
-    // keep list of constructors implamented
-    var implaments  = []
+    // keep list of constructors _implemented
+    var _implements  = []
       //, _protected  = null  // track the protected scope
       //, __private   = null  // track the previous protected scope
       , thisProto   = Object.getPrototypeOf(this);
 
-    // If we are implamenting from a function bace 
-    // then add it to the implaments and capture_args list
+    // If we are implementing from a function bace 
+    // then add it to the _implements and capture_args list
     if(!!implementContext) {
-      implaments.unshift(implementContext);
+      _implements.unshift(implementContext);
       capture_args.unshift(implementContext);
     }
     
@@ -54,17 +54,10 @@ Function.prototype.Implement = function() {
         }
 
         // run constructor function on this object
-        fn.apply(this, thisArgs);
-
-        // moves the previous protected scope to the next constructor
-        //__private = _protected;
-
-        // remove access to the protected var scope  
-        //_protected = this._protected;
-        delete this._protected;  
+        fn.apply(this, thisArgs);  
         
-        // remember we implamented this constructor
-        implaments.push(fn);
+        // remember we _implemented this constructor
+        _implements.push(fn);
       
       }
     }
@@ -74,12 +67,12 @@ Function.prototype.Implement = function() {
       var pass = false ||
       // any empty Function Object is an derived type
       (constructor.name === "Function" && constructor.prototype.name === "Empty") ||
-      // check implaments list for constructor function
-      (typeof constructor === 'function' && implaments.indexOf(constructor) >= 0);
+      // check _implements list for constructor function
+      (typeof constructor === 'function' && _implements.indexOf(constructor) >= 0);
       return pass;
     };
 
-    // provide object extend by reimplamenting this object with more constructors
+    // provide object extend by reimplementing this object with more constructors
     this.Extend = function() {
 
       // support extending object where the base is a native object like "Array"
@@ -92,12 +85,12 @@ Function.prototype.Implement = function() {
       ));
 
       // override __isInstanceOf__ for Extended objects
-      var extending = implaments;
+      var extending = _implements;
       var base__isInstanceOf__ = obj.__isInstanceOf__;
       obj.__isInstanceOf__ = function(constructor) {
 
         return false ||
-        // check that all implaments are met by constructor object
+        // check that all _implements are met by constructor object
         ((Object.prototype.toString.call(constructor) === "[object Object]" && !! constructor.__isInstanceOf__) &&
           (function() {
             for (var imp in extending) {
@@ -135,7 +128,7 @@ Function.prototype.Implement = function() {
 
   return compile.call(
       base
-    , implamentList
+    , implementList
     , implementContext
   );
 

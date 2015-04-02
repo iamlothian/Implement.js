@@ -108,7 +108,7 @@ describe("Function.Implement", function() {
 		var arg = 1;
 		var result = Function.Implement([a,arg]);
 
-		it("can be implemented with passed in values at implamentation time", function() {
+		it("can be implemented with passed in values at implementation time", function() {
 			expect(result.__isInstanceOf__(a)).toBe(true);
 			expect(result.prop).toEqual(arg);
 		});
@@ -169,7 +169,7 @@ describe("Function.Implement", function() {
 			expect(withProto.__isInstanceOf__(p)).toBe(true);
 		});
 
-		it("the _protected property is not public after implamentation", function(){
+		it("the _protected property is not public after implementation", function(){
 			expect(withProto._protected).toBeUndefined();
 		});
 
