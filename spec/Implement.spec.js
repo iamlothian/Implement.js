@@ -208,35 +208,71 @@ describe("Function.Implement", function() {
 
 	describe("constructors with prototypes", function() {
 
-		var p = function() {
-			var self = this;
-			var proto = this.constructor.prototype;
-			self._protected = 1
-			self.prop = 3;
+		var P = (function(){
 
-			proto.getThis = function() {
-			  return this
+			// prototype methods
+			var _PlussPluss = (function PlussPluss() {
+				var count = 0;								// <-- INTERNAL STATE
+				return function(){							
+					count ++;								// <-- EACH CALL UPDATES STATE
+					return count;
+				};
+			})();
+
+			var _GetThis = function GetThis() {
+				return this
 			};
-		};
+
+			// expose constructor function
+			return function() {
+				var self = this;
+				var proto = this.constructor.prototype;
+				self._protected = 1
+				self.prop = 3;
+
+				// by moving the prototype methods outside the 
+				// constructor we can ensure that they will 
+				// not be redefined each time
+				proto.GetThis = _GetThis;
+				proto.PlussPluss = _PlussPluss;
+			};
+
+		})();		
 
 		it("prototypes are not global", function(){
-			expect(Object.getProtected).toBeUndefined();
+			expect(Object.getThis).toBeUndefined();
 		});
 
-		var withProto = p.Implement();
+		var withProto1 = P.Implement();
+		var withProto2 = Function.Implement(P);
 
 		it("can be implemented like normal constructor functions", function(){
-			expect(withProto.__isInstanceOf__(p)).toBe(true);
+			expect(withProto1.__isInstanceOf__(P)).toBe(true);
+			expect(withProto2.__isInstanceOf__(P)).toBe(true);
 		});
 
 		it("the prototypes have been implemented", function(){
-			expect(withProto.getThis).toBeDefined();
+			expect(withProto1.GetThis).toBeDefined();
+			expect(withProto1.PlussPluss).toBeDefined();
+			expect(withProto2.GetThis).toBeDefined();
+			expect(withProto2.PlussPluss).toBeDefined();
 		});
 
-		var withProtoExtended = withProto.Extend();
+		var withProtoExtended = withProto1.Extend();
 
 		it("prototypes are carried to Extended instances", function(){
-			expect(withProtoExtended.getThis).toBeDefined();
+			expect(withProtoExtended.GetThis).toBeDefined();
+			expect(withProtoExtended.PlussPluss).toBeDefined();
+		});
+
+		it("can share internal state accross multiple instances", function(){
+
+			// here the PlussPluss method is being called on 3 distinct instances
+			// and the state of the method is preservced accross implementations
+			expect(withProto1.PlussPluss()).toBe(1)
+			expect(withProto2.PlussPluss()).toBe(2)
+			expect(withProtoExtended.PlussPluss()).toBe(3)
+
 		});
 
 	});
