@@ -1,6 +1,6 @@
 {
   "name": "Implement.js",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Implement.js is a minimal javascript module pattern with constructor chain management.",
   "main": "Implement.js",
   "scripts": {
