@@ -1,6 +1,10 @@
 Implement.js
 ============
 
+Bower:
+
+	$ bower install --save Implement.js
+
 What is it?
 -----------
 
