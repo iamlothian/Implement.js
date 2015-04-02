@@ -180,6 +180,32 @@ It is possible to add prototype functions to constructor functions in a way that
         //...
     };
 
+NOTE: When the prototype method is defined inside the constructor function it will be recreated for each instance. If you want to create prototype methods that share state accross instances, you can do this using an anonymous wrapper function.
+
+	var P = (function(){
+    
+		// prototype methods
+		var _PlussPluss = (function PlussPluss() {
+			var count = 0;								// <-- INTERNAL STATE
+			return function(){							
+				count ++;								// <-- EACH CALL UPDATES STATE
+				return count;
+			};
+		})();
+
+		// expose constructor function
+		return function() {
+			var self = this;
+			var proto = this.constructor.prototype;
+
+			// by moving the prototype methods outside the 
+			// constructor we can ensure that they will 
+			// not be redefined each time
+			proto.PlussPluss = _PlussPluss;
+		};
+
+	})();
+
 Native Object Types
 ============
 
