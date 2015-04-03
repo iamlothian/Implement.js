@@ -35,6 +35,16 @@ Function.prototype.Implement = function() {
       capture_args.unshift(implementContext);
     }
     
+    // provide lookup check
+    var __isInstanceOf__ = function(constructor) {
+      var pass = false ||
+      // any empty Function Object is an derived type
+      (constructor.name === "Function" && constructor.prototype.name === "Empty") ||
+      // check _implements list for constructor function
+      (typeof constructor === 'function' && _implements.indexOf(constructor) >= 0);
+      return pass;
+    };
+
     // compile all constructor functions in the passed 
     // in (imp...list) capture_args into the this object
     for (var arg in capture_args) {
@@ -53,6 +63,8 @@ Function.prototype.Implement = function() {
             break;
         }
 
+        this.__isInstanceOf__ = __isInstanceOf__;
+
         // run constructor function on this object
         fn.apply(this, thisArgs);  
         
@@ -61,16 +73,6 @@ Function.prototype.Implement = function() {
       
       }
     }
-
-    // provide lookup check
-    this.__isInstanceOf__ = function(constructor) {
-      var pass = false ||
-      // any empty Function Object is an derived type
-      (constructor.name === "Function" && constructor.prototype.name === "Empty") ||
-      // check _implements list for constructor function
-      (typeof constructor === 'function' && _implements.indexOf(constructor) >= 0);
-      return pass;
-    };
 
     // provide object extend by reimplementing this object with more constructors
     this.Extend = function() {
