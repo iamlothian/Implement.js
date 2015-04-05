@@ -134,8 +134,52 @@ describe("Function.Implement", function() {
 
 	});
 
+	// Static
+	describe("constructors with static methods and properties", function() {
+
+		// class like definition
+		var P = (function(){
+
+			// Constructor
+			var constructor = function P(){
+				var self = this;
+				self.instanceProp = 1;
+			}
+
+			// Static method on constructor function
+			constructor.isEquelToOne = function(number){
+				return number === 1;
+			}
+
+			return constructor;
+
+		})();
+
+		var p = P.Implement();
+		var q = p.Extend(function(){
+			this.q = 2;
+		});
+
+		it("are possible", function(){
+			expect(P.isEquelToOne).toBeDefined();
+			expect(P.isEquelToOne(1)).toBe(true);
+			expect(P.isEquelToOne(0)).toBe(false);
+
+			expect(p.isEquelToOne).toBeUndefined();
+
+		});
+
+		it("and __isInstanceOf__ passes", function(){
+			expect(p.__isInstanceOf__(P)).toBe(true);
+			expect(q.__isInstanceOf__(P)).toBe(true);
+		});
+
+	});
+
+	// Prototypes
 	describe("constructors with prototypes", function() {
 
+		// class like definition
 		var P = (function(){
 
 			// prototype methods
@@ -151,11 +195,12 @@ describe("Function.Implement", function() {
 				return this
 			};
 
-			// expose constructor function
-			return function() {
+			// this will be called for each instance
+			var constructor = function P() {
+
 				var self = this;
 				var proto = this.constructor.prototype;
-				self._protected = 1
+
 				self.prop = 3;
 
 				// by moving the prototype methods outside the 
@@ -165,10 +210,19 @@ describe("Function.Implement", function() {
 				proto.PlussPluss = _PlussPluss;
 			};
 
-		})();		
+			// expose constructor function
+			return constructor;
 
-		it("prototypes are not global", function(){
-			expect(Object.getThis).toBeUndefined();
+		})();
+
+		var Q = function(){
+			this.q = "prop";
+		};		
+
+		it("do not bleed between constructors", function(){
+			var q = Q.Implement();
+			expect(Object.GetThis).toBeUndefined();
+			expect(q.GetThis).toBeUndefined();
 		});
 
 		var withProto1 = P.Implement();
@@ -205,6 +259,26 @@ describe("Function.Implement", function() {
 
 	});
 
+	// Native objects
+	describe("constructors and native types", function() {
+
+		var myArray = Array.Implement();
+
+		it("Array.Implement() is __isInstanceOf__ Array", function(){
+			expect(myArray.__isInstanceOf__(Array)).toBe(true);
+			expect(myArray instanceof Array).toBe(true);
+		});
+
+		it("Array.Implement() works like an Array", function() {
+
+			expect(myArray.length).toEqual(0);
+
+			myArray.push(1);
+
+			expect(myArray.length).toEqual(1);
+		});
+
+	});
 
 });
 

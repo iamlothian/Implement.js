@@ -1,4 +1,4 @@
-/* Function.prototype.Implement - 0.3.0; Copyright (c) 2015, Matthew Lothian; http://www.opensource.org/licenses/MIT */
+/* Function.prototype.Implement - 0.3.1; Copyright (c) 2015, Matthew Lothian; http://www.opensource.org/licenses/MIT */
 Function.prototype.Implement = function() {
 
   'use strict';
@@ -8,7 +8,7 @@ Function.prototype.Implement = function() {
   , implementList = Array.prototype.slice.call(arguments, 0)
 
   , isNativeCode = function(constructor){
-      return (constructor.toString().split(/[\{\}]/g)[1] === " [native code] " &&
+      return (constructor.toString().split(/[\{\}]/g)[1].trim() === "[native code]" &&
         Object.prototype.toString.call(constructor) === "[object Function]" &&
         constructor.name !== "Function"); 
   }
@@ -63,6 +63,8 @@ Function.prototype.Implement = function() {
             break;
         }
 
+        // add helper properties
+        this.__safe__ = true;
         this.__isInstanceOf__ = __isInstanceOf__;
 
         // run constructor function on this object
@@ -115,16 +117,14 @@ Function.prototype.Implement = function() {
 
   };
 
-  var Instance = function Instance() {
-    this.__safe__ = true;
-  };
-
   // the base of the new this object
   var base;
   // support baseing off native object like "Array"
   if (isNativeCode(this)) {
     base = new this();
   } else {
+    // each Instance is new
+    var Instance = function Instance() {};
     base = new Instance();
   }
 

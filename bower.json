@@ -1,7 +1,7 @@
 {
   "name": "Implement.js",
   "main": "Implement.js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/iamlothian/Implement.js",
   "description": "Implement.js is a minimal javascript module pattern with constructor chain management.",
   "authors": [

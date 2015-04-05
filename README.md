@@ -163,6 +163,31 @@ Don't do this, Implement.js will do it for you.
 
 Another thing to note is `var self = this;` will alias or enclose the current this scope of your constructor, so that any detached functions will not loose there scope if passed around outside the constructor.
 
+Constructor & Static properties
+============
+
+Using a common class like pattern we can add Static properties to our constructor functions
+
+    // class like definition
+    var P = (function(){
+
+        // Constructor
+        var constructor = function P(){
+            var self = this;
+            self.instanceProp = 1;
+        }
+
+        // Static method on constructor function
+        constructor.isEquelToOne = function(number){
+            return number === 1;
+        }
+
+        return constructor;
+
+    })();
+
+`P` will now have the method `isEquelToOne` available on the constructor definition but not on any instances.
+
 Constructor & Prototypes
 ============
 
@@ -220,4 +245,7 @@ You can extends and implent using native objects like `Array` and  `String` by u
 Road Map
 ============
 
-Things to do and improvements...
+ES6 / Harmony considerations and standards.
+- At this point, it will not be possible to use ES6 classes with Implemnt.js as the spec restricts `Class` from being called as a function, this is used at the core of Implement.js. Thought a `class` can extend a contructor function so there may a use still.
+
+
